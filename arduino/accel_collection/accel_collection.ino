@@ -37,8 +37,15 @@ void setup()
     while( 1 ){};
   }
 
-  mma0.setRange(MMA8451_RANGE_2_G);
-  mma1.setRange(MMA8451_RANGE_2_G);
+  mma0.writeRegister8( 0x0E, 0 );
+  mma1.writeRegister8( 0x0E, 0 );
+  mma0.writeRegister8( 0x0F, 1 << 4 );
+  mma1.writeRegister8( 0x0F, 1 << 4 );
+
+  mma0.setDataRate(MMA8451_DATARATE_100_HZ);
+  mma1.setDataRate(MMA8451_DATARATE_100_HZ);
+//  mma0.setRange(MMA8451_RANGE_2_G);
+//  mma1.setRange(MMA8451_RANGE_2_G);
 }
 
 void loop() 

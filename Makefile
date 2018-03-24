@@ -8,7 +8,7 @@ PROFILEFLAGS = -pg
 
 SRCDIR = src/
 INCFLAG = -Iinclude
-LIBFLAG = 
+LIBFLAG =
 
 OBJLIST = data_collection.o signal_processing.o \
 		  AudioFile.o audio_driver.o serial.o   \
