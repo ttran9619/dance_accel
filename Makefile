@@ -8,9 +8,9 @@ PROFILEFLAGS = -pg
 
 SRCDIR = src/
 INCFLAG = -Iinclude
-LIBFLAG = -lncurses
+LIBFLAG =
 
-OBJLIST = program_entry.o
+OBJLIST = program_entry.o data_collection.o signal_processing.o
 
 EXENAME = program_entry
 
@@ -24,10 +24,15 @@ profile: CXXFLAGS += $(PROFILEFLAGS)
 profile: link_stage
 
 link_stage: $(OBJLIST)
-	$(CXX) $(CXXFLAGS) -o $(EXENAME) $(OBJLIST) $(LIBFLAG)
+	$(CXX) $(CXXFLAGS) $^ -o $(EXENAME) $(LIBFLAG)
+
+-include $(OBJS:.o=.d)
+
+%.o: $(SRCDIR)%.c
+	$(CXX) $(CXXFLAGS) $(INCFLAG) -MMD -MF $*.d -c $<
 
 %.o: $(SRCDIR)%.cpp
-	$(CXX) $(CXXFLAGS) $(INCFLAG) -c $<
+	$(CXX) $(CXXFLAGS) $(INCFLAG) -MMD -MF $*.d -c $<
 
 clean:
-	rm -f -r *.o $(EXENAME) $(EXENAME).dSYM *.out
+	rm -f -r *.o *.d $(EXENAME) $(EXENAME).dSYM *.out

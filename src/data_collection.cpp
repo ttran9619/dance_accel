@@ -6,9 +6,7 @@
 /*-----------------------------------------------------------------
 -                           Includes
 -----------------------------------------------------------------*/
-#include "threaded_queue.hpp"
-
-#include <thread>
+#include "thread_sharing.hpp"
 
 /*-----------------------------------------------------------------
 -                       Literal Constants
@@ -29,11 +27,7 @@
 /*-----------------------------------------------------------------
 -                          Procedures
 -----------------------------------------------------------------*/
-int main()
+void data_collection_entry( sample_queue_t& queue )
 {
-    /* Setup Devices */
 
-    /* Instantiate Threads */
-
-    return 0;
 }
