@@ -1,7 +1,7 @@
 SHELL = /bin/sh
 CXX = g++
 
-CXXFLAGS = -std=c++14 -Wall -Werror -Wno-unused-result
+CXXFLAGS = -std=c++14 -Wall -Werror -Wno-unused-result -Wno-sign-compare
 DEBUGFLAGS = -ggdb -DDEBUG
 RELEASEFLAGS = -O2
 PROFILEFLAGS = -pg
@@ -10,7 +10,8 @@ SRCDIR = src/
 INCFLAG = -Iinclude
 LIBFLAG =
 
-OBJLIST = program_entry.o data_collection.o signal_processing.o
+OBJLIST = program_entry.o data_collection.o signal_processing.o \
+		  AudioFile.o
 
 EXENAME = program_entry
 
