@@ -10,6 +10,7 @@
 -----------------------------------------------------------------*/
 #include <queue>
 #include <mutex>
+#include <condition_variable>
 
 /*-----------------------------------------------------------------
 -                        Literal Constants
@@ -46,11 +47,17 @@ template<typename T>
 class ThreadedQueue
 {
     private:
-        std::queue<T>   collection;
-        std::mutex      mu_queue;
+        std::queue<T>           collection;
+        mutable std::mutex      mu_queue;
+        std::condition_variable cond_var;
 
     public:
-        ThreadedQueue(){};
+        ThreadedQueue()
+            : collection()
+            , mu_queue()
+            , cond_var()
+        {};
+
         ~ThreadedQueue(){};
 
         inline bool empty()
@@ -68,13 +75,21 @@ class ThreadedQueue
         inline void push( const T& aItem )
         {
             std::lock_guard<std::mutex> lock( mu_queue );
-            return collection.push( aItem );
+            collection.push( aItem );
+            cond_var.notify_one();
         }
 
         inline T& pop()
         {
             std::lock_guard<std::mutex> lock( mu_queue );
-            return collection.pop();
+            while( collection.empty() )
+            {
+                cond_var.wait( mu_queue );
+            }
+            T temp = collection.front();
+            collection.pop();
+
+            return temp;
         }
 
 };

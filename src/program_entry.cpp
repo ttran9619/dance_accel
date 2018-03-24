@@ -7,6 +7,7 @@
 -                           Includes
 -----------------------------------------------------------------*/
 #include "threaded_queue.hpp"
+#include "thread_sharing.hpp"
 
 #include <thread>
 
@@ -32,8 +33,15 @@
 int main()
 {
     /* Setup Devices */
+    sample_queue_t queue;
 
     /* Instantiate Threads */
+    std::thread thread_dc( data_collection_entry, &queue );
+
+    std::thread thread_ps( signal_processing_entry, &queue );
+
+    thread_dc.join();
+    thread_ps.join();
 
     return 0;
 }

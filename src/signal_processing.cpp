@@ -27,7 +27,7 @@
 /*-----------------------------------------------------------------
 -                          Procedures
 -----------------------------------------------------------------*/
-void signal_processing_entry( sample_queue_t& queue )
+void signal_processing_entry( sample_queue_t* queue )
 {
 
 }
