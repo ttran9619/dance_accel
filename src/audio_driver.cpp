@@ -7,11 +7,14 @@
 -                           Includes
 -----------------------------------------------------------------*/
 #include "AudioFile.h"
-#include "
+
+#include <vector>
 /*-----------------------------------------------------------------
 -                       Literal Constants
 -----------------------------------------------------------------*/
-
+#define CHANNEL1 0
+#define CHANNEL2 1
+#define SENSITIVITY 0.67
 /*-----------------------------------------------------------------
 -                           Enumerations
 -----------------------------------------------------------------*/
@@ -40,13 +43,54 @@ double lengthInSeconds = audioFile.getLengthInSeconds();
 // or, just use this quick shortcut to print a summary to the console
 audioFile.printSummary();
 
-int channel = 0;
+double eLeft = 0;
+double eRight = 0;
+
+double ELeft = 0;
+double ERight = 0;
+
 
 int numSamples = audioFile.getNumSamplesPerChannel();
+numSamples = (numSamples/44100)*44100;
 
-for (int i = 0; i < numSamples; i++)
+int instantLength = numSamples/1024;
+
+std::vector<double> instantEnergy(instantLength);
+std::vector<double> averageEnergy(lengthInSeconds);
+std::vector<bool> beats(instantLength);
+
+for (int i = 0; i < numSamples; i=i+1024)
 {
-	double currentSample = audioFile.samples[channel][i];
+	for(int j = 0; j < 1024; j++) 
+	{
+		eLeft += audioFile.samples[CHANNEL1][i+j]*audioFile.samples[CHANNEL1][i+j];
+		eRight += audioFile.samples[CHANNEL2][i+j]*audioFile.samples[CHANNEL2][i+j];
+	}
+	instantEnergy[i/1024] = eLeft + eRight;
+	
+	
 }
 
+for (int i = 0; i < numSamples; i=i+44100)
+{
+	for(int j = 0; j < 1024; j++) 
+	{
+		ELeft += audioFile.samples[CHANNEL1][i+j]*audioFile.samples[CHANNEL1][i+j];
+		ERight += audioFile.samples[CHANNEL2][i+j]*audioFile.samples[CHANNEL2][i+j];
+	}
+	averageEnergy[i/44100] = 1024*(ELeft+ERight)/44100;
 }
+
+for (int i = 0; i < instantEnergy.size(); i++)
+{
+	if(instantEnergy[i] > averageEnergy[i/44100]*SENSITIVITY)
+	{
+		beats[i] = true;
+	} 
+	else 
+	{
+		beats[i] = false;
+	}
+}
+}
+
