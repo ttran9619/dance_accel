@@ -62,14 +62,16 @@ void data_collection_entry( sample_queue_t* queue )
 
     sample_t c_data;
 
-    // for(;;)
-    // {
-    //     ard0.read( (uint8_t*)&c_data.sen0, sizeof( sensor_data_t ) );
-    //     ard0.read( (uint8_t*)&c_data.sen1, sizeof( sensor_data_t ) );
-    //     // ard1.read( (uint8_t*)&c_data.sen2, sizeof( sensor_data_t ) );
-    //     // ard1.read( (uint8_t*)&c_data.sen3, sizeof( sensor_data_t ) );
+    for(;;)
+    {
+        ard0.read( (uint8_t*)&c_data.ard0, sizeof( sensor_data_t ) );
+        //ard0.read( (uint8_t*)&c_data.sen1, sizeof( sensor_data_t ) );
+        cout << "ACCEL0: " << c_data.ard0.a_mag0 << endl;
+        cout << "ACCEL1: " << c_data.ard0.a_mag1 << endl;
+        // ard1.read( (uint8_t*)&c_data.sen2, sizeof( sensor_data_t ) );
+        // ard1.read( (uint8_t*)&c_data.sen3, sizeof( sensor_data_t ) );
 
-    //     queue->push( c_data );
-    // };
+        queue->push( c_data );
+    };
 
 }

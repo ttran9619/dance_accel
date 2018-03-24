@@ -40,10 +40,8 @@ extern "C"
 
     typedef struct sample
     {
-        sensor_data_t sen0;
-        sensor_data_t sen1;
-        sensor_data_t sen2;
-        sensor_data_t sen3;
+        sensor_data_t ard0;
+        sensor_data_t ard1;
     } sample_t;
 };
 
