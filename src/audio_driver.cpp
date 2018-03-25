@@ -68,21 +68,21 @@ for (int i = 0; i < numSamples; i=i+1024)
 {
 	eLeft = 0;
 	eRight = 0;
-	for(int j = 0; j < 1024; j++) 
+	for(int j = 0; j < 1024; j++)
 	{
 		eLeft += audioFile.samples[CHANNEL1][i+j]*audioFile.samples[CHANNEL1][i+j];
 		eRight += audioFile.samples[CHANNEL2][i+j]*audioFile.samples[CHANNEL2][i+j];
 	}
 	instantEnergy[i/1024] = eLeft + eRight;
-	
-	
+
+
 }
 
 for (int i = 0; i < numSamples; i=i+44100)
 {
 	ELeft = 0;
 	ERight = 0;
-	for(int j = 0; j < 44100; j++) 
+	for(int j = 0; j < 44100; j++)
 	{
 		ELeft += audioFile.samples[CHANNEL1][i+j]*audioFile.samples[CHANNEL1][i+j];
 		ERight += audioFile.samples[CHANNEL2][i+j]*audioFile.samples[CHANNEL2][i+j];
@@ -103,14 +103,14 @@ for (int i = 0; i < instantEnergy.size(); i++)
 	if( lhs > rhs )
 	{
 		(*beats)[i] = true;
-	} 
-	else 
+	}
+	else
 	{
 		(*beats)[i] = false;
 	}
-	
+
 }
 
-return std::move( beats );
+return beats;
 }
 

@@ -56,10 +56,10 @@ void loop() {
     if (isDigit(inChar)) {
       // convert the incoming byte to a char and add it to the string:
       inString += (char)inChar;
-       Serial.println(inChar);
     }
     // if you get a newline, then aset the endLED
-    if (inChar == 13) {
+    if (inChar == '\n') 
+    {
       endLED = inString.toInt();
       // clear the string for new input:
       Serial.println(endLED);
@@ -67,7 +67,7 @@ void loop() {
     }
   }
 
-  for (int i = 1; i <= endLED; i++) {
+  for (int i = 0; i <= endLED; i++) {
     if (i < 12) {
       color = red;
     }
@@ -83,5 +83,5 @@ void loop() {
     strip.setPixelColor(j, 0);
   } // 'Off' pixels after the endLED
   strip.show();                     // Refresh strip
-  delay(5);                        // Pause 20 milliseconds (~50 FPS)
+  delay(100);                        // Pause 20 milliseconds (~50 FPS)
 }

@@ -56,7 +56,10 @@ int main( int argc, char* argv[] )
 
     LEDOut output( argv[3] );
 
-    output.write( 1 );
+    while( true )
+    {
+        output.set_led( 3 );
+    }
 
     while(true);
 

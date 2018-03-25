@@ -14,6 +14,7 @@
 #include "serial/serial.h"
 
 #include <string>
+#include <iostream>
 
 /*-----------------------------------------------------------------
 -                        Literal Constants
@@ -56,10 +57,10 @@ class LEDOut
         {
             if( !out_dev.isOpen() )
             {
-                cout << "Connection Failed!" << endl;
+                std::cout << "Connection Failed!" << std::endl;
                 exit( -1 );
             }
-            cout << "Connection Sucessful!" << endl;
+            std::cout << "Connection Sucessful!" << std::endl;
         };
 
         ~LEDOut()
@@ -67,10 +68,19 @@ class LEDOut
             out_dev.close();
         };
 
-        bool set_led( uint8_t aVal )
+        void set_led( uint8_t aVal )
         {
-            out_dev.write( &aVal, sizeof( uint8_t ) );
-        }
+            std::string temp( std::to_string( aVal ) );
+            temp += "\n";
+            const char* temp_str = temp.c_str();
+            out_dev.write( (const uint8_t*)temp_str, temp.size() );
+            this->readline();
+        };
+
+        void readline()
+        {
+            std::cout << out_dev.readline() << std::endl;
+        };
 
     private:
         serial::Serial out_dev;
