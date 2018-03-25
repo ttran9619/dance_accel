@@ -38,13 +38,17 @@ int main( int argc, char* argv[] )
     /* Setup Devices */
     sample_queue_t queue;
 
-    if( 4 != argc )
+    if( 5 != argc )
     {
-        std::cout << "    Error: Program takes 3 args!" << std::endl;
+        std::cout << "  Error: Program takes 4 args!" << std::endl;
+        std::cout << "  Args: [AccelArduino0] [AccelArduino1] [OutputArduino0] [Soundfile]" << std::endl;
+        std::cout << "  Args must be absolute paths to the devices/files" << std::endl;
         exit( -1 );
     }
 
     /* Call Audio Setup Code */
+    std::cout << "Processing Sound File";
+    uptr_dv_t audio_data = audio_driver( std::string( argv[4] ) );
 
     /* Wait for user start signal */
     std::string input;
@@ -54,22 +58,12 @@ int main( int argc, char* argv[] )
         std::cin >> input;
     }
 
-    LEDOut output( argv[3] );
-
-    while( true )
-    {
-        output.set_led( 3 );
-    }
-
-    while(true);
-
     /* Instantiate Threads */
     std::thread thread_dc( data_collection_entry, &queue, std::string( argv[1] ), std::string( argv[2] ) );
-
-    //std::thread thread_ps( signal_processing_entry, &queue, std::string( argv[3] ) );
+    std::thread thread_ps( signal_processing_entry, &queue, std::move( audio_data ), std::string( argv[3] ) );
 
     thread_dc.join();
-    //thread_ps.join();
+    thread_ps.join();
 
     return 0;
 }

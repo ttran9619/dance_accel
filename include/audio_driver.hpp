@@ -5,6 +5,6 @@
 
 typedef std::unique_ptr<std::vector<bool>> uptr_dv_t;
 
-uptr_dv_t audio_driver();
+uptr_dv_t audio_driver( std::string aSoundFile );
 
 #endif

@@ -12,6 +12,7 @@
 #include <vector>
 #include <iostream>
 #include <memory>
+#include <string>
 
 /*-----------------------------------------------------------------
 -                       Literal Constants
@@ -33,10 +34,10 @@
 /*-----------------------------------------------------------------
 -                          Procedures
 -----------------------------------------------------------------*/
-uptr_dv_t audio_driver()
+uptr_dv_t audio_driver( std::string aSoundFile )
 {
 AudioFile<double> audioFile;
-audioFile.load ("/mnt/d/HackISUSpring2018/dance_accel/sound/abba.wav");
+audioFile.load( aSoundFile );
 
 int sampleRate = audioFile.getSampleRate();
 int bitDepth = audioFile.getBitDepth();
