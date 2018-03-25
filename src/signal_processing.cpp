@@ -37,7 +37,9 @@
 	
 void signal_processing_entry( sample_queue_t* queue )
 {
-	uptr_dv_t* beats=nullptr;
+	uptr_dv_t beats;
+	
+	uint32_t time = 0;
 	
 	uint8_t ledVal = 0;
 	auto leifs_le = []( uint8_t aData )
@@ -56,10 +58,115 @@ void signal_processing_entry( sample_queue_t* queue )
 			}
 			return aData;
 		};
-	auto beat_le = [ &beats ]( uint8_t aData )
+	auto beat_le = [ &beats, time ]( uint8_t aData )
 		{
 			
-			//TODO
+			for(int i = 0; i < 125; i++)
+			{
+				if((time-i) >= 0 && (*beats)[time-i] == true)
+				{
+					return aData = 16;
+				}
+			}
+			for(int i = 0; i < 125; i++)
+			{
+				if((time-i-125) >= 0 && (*beats)[time-i-125] == true)
+				{
+					return aData = 15;
+				}
+			}
+			for(int i = 0; i < 125; i++)
+			{
+				if((time-i-250) >= 0 && (*beats)[time-i-250] == true)
+				{
+					return aData = 14;
+				}
+			}
+			for(int i = 0; i < 125; i++)
+			{
+				if((time-i-375) >= 0 && (*beats)[time-i-375] == true)
+				{
+					return aData = 13;
+				}
+			}
+			for(int i = 0; i < 125; i++)
+			{
+				if((time-i-500) >= 0 && (*beats)[time-i-500] == true)
+				{
+					return aData = 12;
+				}
+			}
+			for(int i = 0; i < 125; i++)
+			{
+				if((time-i-625) >= 0 && (*beats)[time-i-625] == true)
+				{
+					return aData = 11;
+				}
+			}
+			for(int i = 0; i < 125; i++)
+			{
+				if((time-i-750) >= 0 && (*beats)[time-i-750] == true)
+				{
+					return aData = 10;
+				}
+			}
+			for(int i = 0; i < 125; i++)
+			{
+				if((time-i-875) >= 0 && (*beats)[time-i-875] == true)
+				{
+					return aData = 9;
+				}
+			}
+			for(int i = 0; i < 125; i++)
+			{
+				if((time-i-1000) >= 0 && (*beats)[time-i-1000] == true)
+				{
+					return aData = 8;
+				}
+			}
+			for(int i = 0; i < 125; i++)
+			{
+				if((time-i-1125) >= 0 && (*beats)[time-i-1125] == true)
+				{
+					return aData = 7;
+				}
+			}
+			for(int i = 0; i < 125; i++)
+			{
+				if((time-i-1250) >= 0 && (*beats)[time-i-1250] == true)
+				{
+					return aData = 6;
+				}
+			}
+			for(int i = 0; i < 125; i++)
+			{
+				if((time-i-1375) >= 0 && (*beats)[time-i-1375] == true)
+				{
+					return aData = 5;
+				}
+			}
+			for(int i = 0; i < 125; i++)
+			{
+				if((time-i-1500) >= 0 && (*beats)[time-i-1500] == true)
+				{
+					return aData = 4;
+				}
+			}
+			for(int i = 0; i < 125; i++)
+			{
+				if((time-i-1625) >= 0 && (*beats)[time-i-1625] == true)
+				{
+					return aData = 3;
+				}
+			}
+			for(int i = 0; i < 125; i++)
+			{
+				if((time-i-1800) >= 0 && (*beats)[time-i-1800] == true)
+				{
+					return aData = 2;
+				}
+			}
+
 			return aData;
 		};	
 		
