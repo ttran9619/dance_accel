@@ -8,6 +8,7 @@
 -----------------------------------------------------------------*/
 #include "thread_sharing.hpp"
 #include "audio_driver.hpp"
+#include <chrono>
 
 /*-----------------------------------------------------------------
 -                       Literal Constants
@@ -29,15 +30,12 @@
 -                          Procedures
 -----------------------------------------------------------------*/
 
-/* 
- 
- LEDS go from 0-32
- LEDS from 0-8 are determined by how close they are to 25.
-	*/
 	
 void signal_processing_entry( sample_queue_t* queue )
 {
-	uptr_dv_t beats;
+	uptr_dv_t beats = audio_driver();
+	
+	std::chrono::steady_clock::time_point start = std::chrono::steady_clock::now();
 	
 	uint32_t time = 0;
 	
@@ -184,8 +182,10 @@ void signal_processing_entry( sample_queue_t* queue )
 		data2 = leifs_le( data2 );
 		data3 = leifs_le( data3 );
 		data4 = leifs_le( data4 );
+		std::chrono::steady_clock::time_point end = std::chrono::steady_clock::now();
 		
 		
+		time = std::chrono::duration_cast<std::chrono::microseconds>(end - start).count();
 		
 		uint8_t combData = data1 + data2 + data3 + data4;
 		if(data1 > 1 || data2 > 1 || data3 > 1 || data4 > 1)
