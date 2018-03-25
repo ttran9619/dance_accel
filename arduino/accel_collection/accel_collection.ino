@@ -23,21 +23,23 @@ sensor_data_t curr_samp;
 void setup() 
 {
   Serial.begin( 115200 );
+  Serial.println( "START" );
   
   if ( !mma0.begin( 0x1D ) ) 
   {
-    Serial.println( "Couldn't start MMA1" );
+    Serial.println( "Couldn't start MMA0" );
     while( 1 ){};
   }
+  Serial.println( "WOKRS" );
 
-  if ( !mma1.begin( 0x1C ) ) 
-  {
-    Serial.println( "Couldn't start MMA1" );
-    while( 1 ){};
-  }
+//  if ( !mma1.begin( 0x1C ) ) 
+//  {
+//    Serial.println( "Couldn't start MMA1" );
+//    while( 1 ){};
+//  }
 
   mma0.setDataRate(MMA8451_DATARATE_800_HZ);
-  mma1.setDataRate(MMA8451_DATARATE_800_HZ);
+//  mma1.setDataRate(MMA8451_DATARATE_800_HZ);
 }
 
 void loop() 
@@ -47,17 +49,18 @@ void loop()
   sensors_event_t event0;
   mma0.getEvent( &event0 );
 
-  sensors_event_t event1;
-  mma1.getEvent( &event1 );
+//  sensors_event_t event1;
+//  mma1.getEvent( &event1 );
 
   /* Populate output packet */
   curr_samp.a_mag0 = sqrt( sq( event0.acceleration.x ) + 
                            sq( event0.acceleration.y ) + 
                            sq( event0.acceleration.z ) );
-
-  curr_samp.a_mag1 = sqrt( sq( event1.acceleration.x ) + 
-                           sq( event1.acceleration.y ) + 
-                           sq( event1.acceleration.z ) );
+  curr_samp.a_mag1 = curr_samp.a_mag0;
+//
+//  curr_samp.a_mag1 = sqrt( sq( event1.acceleration.x ) + 
+//                           sq( event1.acceleration.y ) + 
+//                           sq( event1.acceleration.z ) );
 
   /* Send off Data */
   Serial.write( (char*)&curr_samp, sizeof( sensor_data_t ) );               

@@ -13,6 +13,7 @@
 
 #include "serial/serial.h"
 
+#include <unistd.h>
 #include <string>
 #include <iostream>
 
@@ -75,11 +76,13 @@ class LEDOut
             const char* temp_str = temp.c_str();
             out_dev.write( (const uint8_t*)temp_str, temp.size() );
             this->readline();
+            usleep( 1000 * 100 );
         };
 
         void readline()
         {
-            std::cout << out_dev.readline() << std::endl;
+            //std::cout << out_dev.readline() << std::endl;
+            out_dev.readline();
         };
 
     private:

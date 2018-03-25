@@ -25,6 +25,11 @@
 -                           Structures
 -----------------------------------------------------------------*/
 
+/*-----------------------------------------------------------------
+-                             Macros
+-----------------------------------------------------------------*/
+#define RAND_RANGE( MIN, MAX ) ( rand() % ( ( MAX + 1 ) - MIN ) + MIN )
+
 /*----------------------------------------------------------------
 -                          Prototypes
 -----------------------------------------------------------------*/
@@ -42,7 +47,7 @@ void signal_processing_entry( sample_queue_t* queue, uptr_dv_t audio_data, std::
 
 	long int time = 0;
 
-	auto leifs_le = []( uint8_t aData )
+	auto leifs_le = []( uint8_t aData ) -> uint8_t
 		{
 			if(aData <= 15)
 			{
@@ -58,7 +63,7 @@ void signal_processing_entry( sample_queue_t* queue, uptr_dv_t audio_data, std::
 			}
 			return aData;
 		};
-	auto beat_le = [ &audio_data, time ]( uint8_t aData )
+	auto beat_le = [ &audio_data, &time ]( uint8_t aData )
 		{
 
 			for(int i = 0; i < 125; i++)
@@ -178,91 +183,121 @@ void signal_processing_entry( sample_queue_t* queue, uptr_dv_t audio_data, std::
 		uint8_t data2 = sampleData.ard0.a_mag1;
 		uint8_t data3 = sampleData.ard1.a_mag0;
 		uint8_t data4 = sampleData.ard1.a_mag1;
+
         uint8_t ledVal;
+        if( data1 < 10 )
+        {
+            ledVal = 0;
+        }
+        else if( data1 < 20 )
+        {
+            ledVal = RAND_RANGE( 20, 32 );
+        }
+        else
+        {
+            ledVal = RAND_RANGE( 0, 20 );
+        }
+
+        // std::cout << "Raw: " << std::to_string( data1 ) << std::endl;
+        // std::cout << "Score: " << std::to_string( ledVal ) << std::endl;
 
 
-		data1 = leifs_le( data1 );
-		data2 = leifs_le( data2 );
-		data3 = leifs_le( data3 );
-		data4 = leifs_le( data4 );
-		std::chrono::steady_clock::time_point end = std::chrono::steady_clock::now();
+
+        // // std::cout << std::to_string( data1 ) << std::endl;
+        // // std::cout << std::to_string( data2 ) << std::endl;
+        // // std::cout << std::to_string( data3 ) << std::endl;
+        // // std::cout << std::to_string( data4 ) << std::endl;
+		// data1 = leifs_le( data1 );
+		// data2 = leifs_le( data2 );
+		// data3 = leifs_le( data3 );
+		// data4 = leifs_le( data4 );
+
+        // // std::cout << std::to_string( data1 ) << std::endl;
+        // // std::cout << std::to_string( data2 ) << std::endl;
+        // // std::cout << std::to_string( data3 ) << std::endl;
+        // // std::cout << std::to_string( data4 ) << std::endl;
+		// std::chrono::steady_clock::time_point end = std::chrono::steady_clock::now();
 
 
-		time = std::chrono::duration_cast<std::chrono::microseconds>(end - start).count();
+		// time = std::chrono::duration_cast<std::chrono::microseconds>(end - start).count();
 
-		uint8_t combData = data1 + data2 + data3 + data4;
-		if(data1 > 1 || data2 > 1 || data3 > 1 || data4 > 1)
-		{
-			uint8_t tempMax1 = std::max(data1,data2);
-			uint8_t tempMax2 = std::max(data3,data4);
-			ledVal = std::max(tempMax1,tempMax2);
-		}
-		else if(combData != 0)
-		{
-			if(data1 == 1)
-			{
-				data1 = beat_le( data1 );
-				if(data2 == 1)
-				{
-					data2 = beat_le( data2 );
-					data3 = 0;
-					data4 = 0;
-				}
-				else
-				{
-					if(data3 == 1)
-					{
-						data3 = beat_le( data3 );
-						data4 = 0;
-					}
-					else
-					{
-						if(data4 == 1)
-						{
-							data4 = beat_le( data4 );
-						}
-					}
-				}
-			}
-			else
-			{
-				if(data2 == 1)
-				{
-					data2 = beat_le( data2 );
-					if(data3 == 1)
-					{
-						data3 = beat_le( data3 );
-						data4 = 0;
-					}
-				}
-				else
-				{
-					if(data3 == 1)
-					{
-						data3 = beat_le( data3 );
-						if(data4 == 1)
-						{
-							data4 = beat_le( data4 );
-						}
-					}
-					else
-					{
-						if(data4 == 1)
-						{
-							data4 = beat_le( data4 );
-						}
-						else
-						{
-							data1 = 0;
-							data2 = 0;
-							data3 = 0;
-							data4 = 0;
-						}
-					}
-				}
-			}
-		}
-        ledVal = data1+data2+data3+data4;
+		// uint8_t combData = data1 + data2 + data3 + data4;
+		// if(data1 > 1 || data2 > 1 || data3 > 1 || data4 > 1)
+		// {
+		// 	uint8_t tempMax1 = std::max(data1,data2);
+		// 	uint8_t tempMax2 = std::max(data3,data4);
+		// 	ledVal = std::max(tempMax1,tempMax2);
+		// }
+		// else if(combData != 0)
+		// {
+		// 	if(data1 == 1)
+		// 	{
+		// 		data1 = beat_le( data1 );
+		// 		if(data2 == 1)
+		// 		{
+		// 			data2 = beat_le( data2 );
+		// 			data3 = 0;
+		// 			data4 = 0;
+		// 		}
+		// 		else
+		// 		{
+		// 			if(data3 == 1)
+		// 			{
+		// 				data3 = beat_le( data3 );
+		// 				data4 = 0;
+		// 			}
+		// 			else
+		// 			{
+		// 				if(data4 == 1)
+		// 				{
+		// 					data4 = beat_le( data4 );
+		// 				}
+		// 			}
+		// 		}
+		// 	}
+		// 	else
+		// 	{
+		// 		if(data2 == 1)
+		// 		{
+		// 			data2 = beat_le( data2 );
+		// 			if(data3 == 1)
+		// 			{
+		// 				data3 = beat_le( data3 );
+		// 				data4 = 0;
+		// 			}
+		// 		}
+		// 		else
+		// 		{
+		// 			if(data3 == 1)
+		// 			{
+		// 				data3 = beat_le( data3 );
+		// 				if(data4 == 1)
+		// 				{
+		// 					data4 = beat_le( data4 );
+		// 				}
+		// 			}
+		// 			else
+		// 			{
+		// 				if(data4 == 1)
+		// 				{
+		// 					data4 = beat_le( data4 );
+		// 				}
+		// 				else
+		// 				{
+		// 					data1 = 0;
+		// 					data2 = 0;
+		// 					data3 = 0;
+		// 					data4 = 0;
+		// 				}
+		// 			}
+		// 		}
+		// 	}
+		// }
+        // ledVal = data1+data2+data3+data4;
+        // if( ledVal > 32 )
+        // {
+        //     ledVal = 32;
+        // }
         output.set_led( ledVal );
 
 
