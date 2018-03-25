@@ -14,6 +14,7 @@
 #include <stdio.h>
 #include <memory>
 #include <iostream>
+#include <string>
 
 using namespace std;
 
@@ -40,10 +41,10 @@ using namespace std;
 /*-----------------------------------------------------------------
 -                          Procedures
 -----------------------------------------------------------------*/
-void data_collection_entry( sample_queue_t* queue )
+void data_collection_entry( sample_queue_t* queue, std::string port0, std::string port1 )
 {
 
-    serial::Serial ard0( PORT_SENSOR0,
+    serial::Serial ard0( port0,
                          BAUD_RATE,
                          serial::Timeout::simpleTimeout( 1000 ) );
     if( !ard0.isOpen() )
@@ -53,22 +54,22 @@ void data_collection_entry( sample_queue_t* queue )
     }
     cout << "Connection Sucessful!" << endl;
 
-    // serial::Serial ard1( PORT_SENSOR0,
+    // serial::Serial ard1( port1,
     //                      BAUD_RATE,
     //                      serial::Timeout::simpleTimeout( 1000 ) );
-    // serial::Serial sen1( PORT_SENSOR0,
-    //                      BAUD_RATE,
-    //                      serial::Timeout::simpleTimeout( 1000 ) );
+    // if( !ard1.isOpen() )
+    // {
+    //     cout << "Connection Failed!" << endl;
+    //     exit( -1 );
+    // }
+    // cout << "Connection Sucessful!" << endl;
 
     sample_t c_data;
-
     for(;;)
     {
         ard0.read( (uint8_t*)&c_data.ard0, sizeof( sensor_data_t ) );
-        //ard0.read( (uint8_t*)&c_data.sen1, sizeof( sensor_data_t ) );
-        cout << "ACCEL0: " << c_data.ard0.a_mag0 << "  ACCEL1: " << c_data.ard0.a_mag1 << endl;
-        // ard1.read( (uint8_t*)&c_data.sen2, sizeof( sensor_data_t ) );
-        // ard1.read( (uint8_t*)&c_data.sen3, sizeof( sensor_data_t ) );
+        //ard1.read( (uint8_t*)&c_data.ard1, sizeof( sensor_data_t ) );
+        cout << "ACCEL0: " << std::to_string( c_data.ard0.a_mag0 ) << "  ACCEL1: " << std::to_string( c_data.ard0.a_mag1 ) << endl;
 
         queue->push( c_data );
     };

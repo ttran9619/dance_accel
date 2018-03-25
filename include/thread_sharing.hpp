@@ -34,8 +34,8 @@ extern "C"
 {
     typedef struct sensor_data_struct
     {
-        float a_mag0;
-        float a_mag1;
+        uint8_t a_mag0;
+        uint8_t a_mag1;
     } sensor_data_t;
 
     typedef struct sample
@@ -57,18 +57,11 @@ typedef ThreadedQueue<sample_t> sample_queue_t;
 /*-----------------------------------------------------------------
 -                             Classes
 -----------------------------------------------------------------*/
-struct InputQueues
-{
-    sample_queue_t accel0;
-    sample_queue_t accel1;
-    sample_queue_t accel2;
-    sample_queue_t accel3;
-};
 
 /*-----------------------------------------------------------------
 -                             Prototypes
 -----------------------------------------------------------------*/
-void data_collection_entry( sample_queue_t* queue );
-void signal_processing_entry( sample_queue_t* queue );
+void data_collection_entry( sample_queue_t* queue, std::string port0, std::string port1 );
+void signal_processing_entry( sample_queue_t* queue, uptr_dv_t audio_data, std::string port2 );
 
 #endif

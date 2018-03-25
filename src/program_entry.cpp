@@ -10,6 +10,8 @@
 #include "thread_sharing.hpp"
 
 #include <thread>
+#include <string>
+#include <iostream>
 
 /*-----------------------------------------------------------------
 -                       Literal Constants
@@ -30,15 +32,21 @@
 /*-----------------------------------------------------------------
 -                          Procedures
 -----------------------------------------------------------------*/
-int main()
+int main( int argc, char* argv[] )
 {
     /* Setup Devices */
     sample_queue_t queue;
 
-    /* Instantiate Threads */
-    std::thread thread_dc( data_collection_entry, &queue );
+    if( 4 != argc )
+    {
+        std::cout << "    Error: Program takes 3 args!" << std::endl;
+        exit( -1 );
+    }
 
-    std::thread thread_ps( signal_processing_entry, &queue );
+    /* Instantiate Threads */
+    std::thread thread_dc( data_collection_entry, &queue, std::string( argv[1] ), std::string( argv[2] ) );
+
+    //std::thread thread_ps( signal_processing_entry, &queue, std::string( argv[3] ) );
 
     thread_dc.join();
     thread_ps.join();

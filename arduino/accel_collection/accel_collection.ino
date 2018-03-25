@@ -2,20 +2,19 @@
 #include <Adafruit_Sensor.h>
 
 /* Literials */
-#define SAMPLING_PERIOD 20
+#define SAMPLING_PERIOD 1
 
 /* Structures */
 typedef struct sensor_data_struct
 {
-    float a_mag0;
-    float a_mag1;
+    unsigned char a_mag0;
+    unsigned char a_mag1;
 } sensor_data_t;
 
 /* Globals */
 Adafruit_MMA8451 mma0 = Adafruit_MMA8451();
 Adafruit_MMA8451 mma1 = Adafruit_MMA8451();
 
-float         r     = 0;
 unsigned long otime = 0;
 
 sensor_data_t curr_samp;
@@ -37,15 +36,8 @@ void setup()
     while( 1 ){};
   }
 
-  mma0.writeRegister8( 0x0E, 0 );
-  mma1.writeRegister8( 0x0E, 0 );
-  mma0.writeRegister8( 0x0F, 1 << 4 );
-  mma1.writeRegister8( 0x0F, 1 << 4 );
-
-  mma0.setDataRate(MMA8451_DATARATE_100_HZ);
-  mma1.setDataRate(MMA8451_DATARATE_100_HZ);
-//  mma0.setRange(MMA8451_RANGE_2_G);
-//  mma1.setRange(MMA8451_RANGE_2_G);
+  mma0.setDataRate(MMA8451_DATARATE_800_HZ);
+  mma1.setDataRate(MMA8451_DATARATE_800_HZ);
 }
 
 void loop() 
