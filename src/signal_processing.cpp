@@ -37,7 +37,7 @@
 	
 void signal_processing_entry( sample_queue_t* queue )
 {
-	uptr_dv_t* beats;
+	uptr_dv_t* beats=nullptr;
 	
 	uint8_t ledVal = 0;
 	auto leifs_le = []( uint8_t aData )
@@ -56,13 +56,10 @@ void signal_processing_entry( sample_queue_t* queue )
 			}
 			return aData;
 		};
-	auto beat_le = [ beats ]( uint8_t aData )
+	auto beat_le = [ &beats ]( uint8_t aData )
 		{
-			if (aData == 1) 
-			{
-				//TODO
-			}
 			
+			//TODO
 			return aData;
 		};	
 		
@@ -86,14 +83,77 @@ void signal_processing_entry( sample_queue_t* queue )
 		uint8_t combData = data1 + data2 + data3 + data4;
 		if(data1 > 1 || data2 > 1 || data3 > 1 || data4 > 1)
 		{
-			uint8_t tempMax1 = max(data1,data2);
-			uint8_t tempMax2 = max(data3,data4);
-			ledVal = max(tempMax1,tempMax2);
+			uint8_t tempMax1 = std::max(data1,data2);
+			uint8_t tempMax2 = std::max(data3,data4);
+			ledVal = std::max(tempMax1,tempMax2);
 		} 
 		else if(combData != 0)
 		{
-			
+			if(data1 == 1)
+			{
+				data1 = beat_le( data1 );
+				if(data2 == 1)
+				{
+					data2 = beat_le( data2 );
+					data3 = 0;
+					data4 = 0;
+				}
+				else
+				{
+					if(data3 == 1)
+					{
+						data3 = beat_le( data3 );
+						data4 = 0;
+					}
+					else 
+					{
+						if(data4 == 1)
+						{
+							data4 = beat_le( data4 );
+						}
+					}
+				}
+			}
+			else 
+			{
+				if(data2 == 1)
+				{
+					data2 = beat_le( data2 );
+					if(data3 == 1)
+					{
+						data3 = beat_le( data3 );
+						data4 = 0;
+					}
+				}
+				else
+				{
+					if(data3 == 1)
+					{
+						data3 = beat_le( data3 );
+						if(data4 == 1)
+						{
+							data4 = beat_le( data4 );
+						}
+					}
+					else 
+					{
+						if(data4 == 1)
+						{
+							data4 = beat_le( data4 );
+						}
+						else
+						{
+							data1 = 0;
+							data2 = 0;
+							data3 = 0;
+							data4 = 0;
+						}
+					}
+				}
+			}
 		}
+		ledVal = data1+data2+data3+data4;
+		data4 = ledVal;
 		
 		
 	}
