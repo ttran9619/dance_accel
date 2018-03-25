@@ -24,8 +24,6 @@ using namespace std;
 #define PORT_SENSOR0 "/dev/tty.wchusbserial14510"
 #define PORT_SENSOR1 "/dev/tty.wchusbserial1450"
 
-#define BAUD_RATE       115200
-
 /*-----------------------------------------------------------------
 -                           Enumerations
 -----------------------------------------------------------------*/

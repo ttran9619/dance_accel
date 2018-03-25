@@ -2,8 +2,8 @@
 -                           HackISU S2018
 -              Valery S., Leif B., Emily A., Tyler T.
 -----------------------------------------------------------------*/
-#ifndef THREAD_SHARING_H
-#define THREAD_SHARING_H
+#ifndef LED_OUT_H
+#define LED_OUT_H
 
 /*-----------------------------------------------------------------
 -                           Includes
@@ -11,10 +11,13 @@
 #include "threaded_queue.hpp"
 #include "audio_driver.hpp"
 
+#include "serial/serial.h"
+
+#include <string>
+
 /*-----------------------------------------------------------------
 -                        Literal Constants
 -----------------------------------------------------------------*/
-#define BAUD_RATE       115200
 
 /*-----------------------------------------------------------------
 -                           Enumerations
@@ -27,30 +30,14 @@
 /*-----------------------------------------------------------------
 -                        Forward Declarations
 -----------------------------------------------------------------*/
-class Sample;
 
 /*-----------------------------------------------------------------
 -                             Structs
 -----------------------------------------------------------------*/
-extern "C"
-{
-    typedef struct sensor_data_struct
-    {
-        uint8_t a_mag0;
-        uint8_t a_mag1;
-    } sensor_data_t;
-
-    typedef struct sample
-    {
-        sensor_data_t ard0;
-        sensor_data_t ard1;
-    } sample_t;
-};
 
 /*-----------------------------------------------------------------
 -                             Typedefs
 -----------------------------------------------------------------*/
-typedef ThreadedQueue<sample_t> sample_queue_t;
 
 /*-----------------------------------------------------------------
 -                             Functors
@@ -59,11 +46,38 @@ typedef ThreadedQueue<sample_t> sample_queue_t;
 /*-----------------------------------------------------------------
 -                             Classes
 -----------------------------------------------------------------*/
+class LEDOut
+{
+    public:
+        LEDOut( std::string port )
+            :out_dev( port,
+                      BAUD_RATE,
+                      serial::Timeout::simpleTimeout( 1000 ) )
+        {
+            if( !out_dev.isOpen() )
+            {
+                cout << "Connection Failed!" << endl;
+                exit( -1 );
+            }
+            cout << "Connection Sucessful!" << endl;
+        };
+
+        ~LEDOut()
+        {
+            out_dev.close();
+        };
+
+        bool set_led( uint8_t aVal )
+        {
+            out_dev.write( &aVal, sizeof( uint8_t ) );
+        }
+
+    private:
+        serial::Serial out_dev;
+};
 
 /*-----------------------------------------------------------------
 -                             Prototypes
 -----------------------------------------------------------------*/
-void data_collection_entry( sample_queue_t* queue, std::string port0, std::string port1 );
-void signal_processing_entry( sample_queue_t* queue, uptr_dv_t audio_data, std::string port2 );
 
 #endif

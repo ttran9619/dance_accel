@@ -1,6 +1,6 @@
 /*-----------------------------------------------------------------
 -                           HackISU S2018
--              Valery S., Leif B., Alek E., Tyler T.
+-              Valery S., Leif B., Emily A., Tyler T.
 -----------------------------------------------------------------*/
 #ifndef THREADEDQUEUE_H
 #define THREADEDQUEUE_H
