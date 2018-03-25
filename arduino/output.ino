@@ -1,9 +1,5 @@
-// Simple strand test for Adafruit Dot Star RGB LED strip.
-// This is a basic diagnostic tool, NOT a graphics demo...helps confirm
-// correct wiring and tests each pixel's ability to display red, green
-// and blue and to forward data down the line.  By limiting the number
-// and color of LEDs, it's reasonably safe to power a couple meters off
-// the Arduino's 5V pin.  DON'T try that with other code!
+//Made by Valery Smith 2018
+//Hack ISUUU
 
 #include <Adafruit_DotStar.h>
 // Because conditional #includes don't work w/Arduino sketches...
@@ -27,7 +23,7 @@ Adafruit_DotStar strip = Adafruit_DotStar(
 //Adafruit_DotStar strip = Adafruit_DotStar(NUMPIXELS, DOTSTAR_BRG);
 
 void setup() {
-  Serial.begin(9600);
+  Serial.begin(115200);
 #if defined(__AVR_ATtiny85__) && (F_CPU == 16000000L)
   clock_prescale_set(clock_div_1); // Enable 16 MHz on Trinket
 #endif
@@ -43,9 +39,8 @@ void setup() {
 // Runs 10 LEDs at a time along strip, cycling through red, green and blue.
 // This requires about 200 mA for all the 'on' pixels + 1 mA per 'off' pixel.
 
-int startLED = 0;
 int hold;
-int endLED = 0; // Index of first 'on' and 'off' pixels
+int endLED = 0; // Index of the score/top pixel
 uint32_t green = 0xFF0000;      // 'On' color (starts red)
 uint32_t yelllow = 0xC36B13;
 uint32_t blue = 0x0000FF;
@@ -61,37 +56,32 @@ void loop() {
     if (isDigit(inChar)) {
       // convert the incoming byte to a char and add it to the string:
       inString += (char)inChar;
+       Serial.println(inChar);
     }
-    // if you get a newline, print the string, then the string's value:
+    // if you get a newline, then aset the endLED
     if (inChar == 13) {
-      startLED = inString.toInt();
-      startLED = 30;
-      Serial.println(startLED);
-      Serial.println(inString);
+      endLED = inString.toInt();
       // clear the string for new input:
+      Serial.println(endLED);
       inString = "";
-
     }
   }
 
-  for (int i = 1; i <= startLED; i++) {
+  for (int i = 1; i <= endLED; i++) {
     if (i < 12) {
       color = red;
-
     }
     if (i < 25 && i > 12) {
       color = yelllow;
-
     }
     if (i > 24 ) {
       color = blue;
-     
     }
     strip.setPixelColor(i, color); // 'On' pixel at head}
   }
-  for ( int j = startLED; j < NUMPIXELS; ++j) {
+  for ( int j = endLED; j < NUMPIXELS; ++j) {
     strip.setPixelColor(j, 0);
-  } // 'Off' pixel at tail
+  } // 'Off' pixels after the endLED
   strip.show();                     // Refresh strip
   delay(5);                        // Pause 20 milliseconds (~50 FPS)
 }
