@@ -3,6 +3,6 @@
 #include "include/audio_driver.hpp"
 int main()
 {
-    audio_driver();
+    auto beats = audio_driver();
     return 0;
 }

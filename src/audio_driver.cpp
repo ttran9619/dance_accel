@@ -111,6 +111,6 @@ for (int i = 0; i < instantEnergy.size(); i++)
 	
 }
 
-return beats;
+return std::move( beats );
 }
 

@@ -50,12 +50,14 @@ class ThreadedQueue
         std::queue<T>           collection;
         mutable std::mutex      mu_queue;
         std::condition_variable cond_var;
+		bool					ready;
 
     public:
         ThreadedQueue()
             : collection()
             , mu_queue()
             , cond_var()
+			, ready( false )
         {};
 
         ~ThreadedQueue(){};
@@ -76,15 +78,16 @@ class ThreadedQueue
         {
             std::lock_guard<std::mutex> lock( mu_queue );
             collection.push( aItem );
+			ready = true;
             cond_var.notify_one();
         }
 
-        inline T& pop()
+        inline T pop()
         {
-            std::lock_guard<std::mutex> lock( mu_queue );
+            std::unique_lock<std::mutex> lock( mu_queue );
             while( collection.empty() )
             {
-                cond_var.wait( mu_queue );
+                cond_var.wait( lock, [this]{return ready;} );
             }
             T temp = collection.front();
             collection.pop();
